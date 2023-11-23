@@ -20,6 +20,7 @@ public class EventConverter {
 
     public EventDTO toDTO(Event event) {
         return new EventDTO(
+                event.getId(),
                 event.getName(),
                 event.getStartDate(),
                 event.getEndDate(),

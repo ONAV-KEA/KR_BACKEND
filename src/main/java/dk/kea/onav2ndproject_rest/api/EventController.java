@@ -24,6 +24,12 @@ public class EventController {
         return eventService.getAllEvents(pageable);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<EventDTO> getEventById(@PathVariable int id) {
+        EventDTO event = eventService.getEventById(id);
+        return new ResponseEntity<>(event, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDTO) {
         EventDTO createdEvent = eventService.createEvent(eventDTO);
