@@ -19,6 +19,8 @@ public class User {
     private String username;
     private String password;
     private Role role;
+    private String email;
+    private Boolean notications;
     @ManyToOne
 @JoinColumn(name = "department_id")
     private Department department;

@@ -22,7 +22,7 @@ public class Event {
     private LocalDate endDate;
     private String description;
     private String location;
-    private String image;
+    private String imgRef;
     @ManyToMany(mappedBy = "event")
     private Set<User> users;
     @ManyToMany(mappedBy = "events")
