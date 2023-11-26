@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -24,11 +25,7 @@ public class User {
     @ManyToOne
 @JoinColumn(name = "department_id")
     private Department department;
-    @ManyToMany
-    @JoinTable(
-            name="user_event",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "event_id")}
-    )
-    private Set<Event> event;
+    @OneToMany(mappedBy = "user")
+    private Set<UserEventDetails> userEventDetails;
+
 }

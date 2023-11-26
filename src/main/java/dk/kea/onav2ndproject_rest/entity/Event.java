@@ -23,8 +23,8 @@ public class Event {
     private String description;
     private String location;
     private String imgRef;
-    @ManyToMany(mappedBy = "event")
-    private Set<User> users;
+    @OneToMany(mappedBy = "event")
+    private Set<UserEventDetails> userEventDetails;
     @ManyToMany(mappedBy = "events")
     private Set<Department> departments;
 }
