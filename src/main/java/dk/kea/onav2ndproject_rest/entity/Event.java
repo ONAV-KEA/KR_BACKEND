@@ -20,6 +20,8 @@ public class Event {
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
+    @Lob
+    @Column(name="description", length=512)
     private String description;
     private String location;
     private String imgRef;
