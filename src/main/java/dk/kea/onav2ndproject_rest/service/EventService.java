@@ -3,7 +3,7 @@ package dk.kea.onav2ndproject_rest.service;
 import dk.kea.onav2ndproject_rest.dto.EventConverter;
 import dk.kea.onav2ndproject_rest.dto.EventDTO;
 import dk.kea.onav2ndproject_rest.entity.Event;
-import dk.kea.onav2ndproject_rest.exeception.EventNotFoundException;
+import dk.kea.onav2ndproject_rest.exception.EventNotFoundException;
 import dk.kea.onav2ndproject_rest.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
