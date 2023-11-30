@@ -1,6 +1,7 @@
 package dk.kea.onav2ndproject_rest.service;
 
 
+import dk.kea.onav2ndproject_rest.JwtTokenManager;
 import dk.kea.onav2ndproject_rest.config.SecurityConfiguration;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.repository.UserRepository;
@@ -18,6 +19,7 @@ import java.util.Set;
 public class UserService implements IUserService{
 
     private UserRepository userRepository;
+    private JwtTokenManager jwtTokenManager;
     @Override
     public Set<User> findAll() {
         Set<User> set = new HashSet<>();
@@ -53,5 +55,11 @@ public class UserService implements IUserService{
     public List<User> findByName(String name) {
         System.out.println("Userservice called findByName with argument: " + name);
         return userRepository.findByUsername(name);
+    }
+
+    @Override
+    public User findByToken(String token) {
+        String username = jwtTokenManager.getUsernameFromToken(token);
+        return userRepository.findByUsername(username).get(0);
     }
 }

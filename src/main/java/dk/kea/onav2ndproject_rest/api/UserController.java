@@ -6,6 +6,7 @@ import dk.kea.onav2ndproject_rest.entity.JwtResponseModel;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.service.IUserService;
 import dk.kea.onav2ndproject_rest.service.JwtUserDetailsService;
+import dk.kea.onav2ndproject_rest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -83,5 +84,12 @@ public class UserController {
         Map<String,String > map = new HashMap<>();
         map.put("message","user deleted, if found " + user.getUsername());
         return ResponseEntity.ok(map);
+    }
+
+    @GetMapping()
+    public ResponseEntity<User> getUserByToken(@RequestParam String token){
+        System.out.println("getUserByToken is called with token: " + token);
+        User user = userService.findByToken(token);
+        return ResponseEntity.ok(user);
     }
 }
