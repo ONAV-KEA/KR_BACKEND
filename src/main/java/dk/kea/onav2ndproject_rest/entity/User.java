@@ -15,7 +15,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
     private String name;
     private String username;
     private String password;
@@ -28,4 +28,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserEventDetails> userEventDetails;
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }
