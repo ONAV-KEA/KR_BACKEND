@@ -36,8 +36,8 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        RequestMatcher loginMatcher = new AntPathRequestMatcher("/login");
-        RequestMatcher signupMatcher = new AntPathRequestMatcher("/signup");
+        RequestMatcher loginMatcher = new AntPathRequestMatcher("/api/user/login");
+        RequestMatcher signupMatcher = new AntPathRequestMatcher("/api/user/signup");
         RequestMatcher eventMatcher = new AntPathRequestMatcher("/api/event", HttpMethod.GET.name());
         RequestMatcher orMatcher = new OrRequestMatcher(loginMatcher, signupMatcher, eventMatcher);
 
@@ -62,7 +62,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         System.out.println("addCorsMappings called");
         registry.addMapping("/**")  // /** means match any string recursively
-                .allowedOriginPatterns("http://localhost:*") //Multiple strings allowed. Wildcard * matches all port numbers.
+                .allowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*/") //Multiple strings allowed. Wildcard * matches all port numbers.
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS") // decide which methods to allow
                 .allowCredentials(true);
     }
