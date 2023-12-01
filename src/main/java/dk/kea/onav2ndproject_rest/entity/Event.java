@@ -1,6 +1,8 @@
 package dk.kea.onav2ndproject_rest.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,7 @@ public class Event {
     private String imgRef;
     @OneToMany(mappedBy = "event")
     private Set<UserEventDetails> userEventDetails;
+    @JsonBackReference
     @ManyToMany(mappedBy = "events")
     private Set<Department> departments;
 }

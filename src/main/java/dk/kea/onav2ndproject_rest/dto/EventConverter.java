@@ -15,6 +15,7 @@ public class EventConverter {
         event.setDescription(eventDTO.description());
         event.setLocation(eventDTO.location());
         event.setImgRef(eventDTO.imgRef());
+        event.setDepartments(eventDTO.departments());
         return event;
     }
 
@@ -26,7 +27,8 @@ public class EventConverter {
                 event.getEndDate(),
                 event.getDescription(),
                 event.getLocation(),
-                event.getImgRef()
+                event.getImgRef(),
+                event.getDepartments()
         );
     }
 }
