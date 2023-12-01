@@ -60,12 +60,27 @@ public class EventService {
     }
 
     public EventDTO updateEvent(int id, EventDTO eventDTO){
-        Optional<Event> event = eventRepository.findById(id);
-        if (event.isPresent()){
-            Event eventToUpdate = eventConverter.toEntity(eventDTO);
-            eventToUpdate.setId(id);
-            Event updatedEvent = eventRepository.save(eventToUpdate);
-            return eventConverter.toDTO(updatedEvent);
+        Optional<Event> eventOptional = eventRepository.findById(id);
+        if (eventOptional.isPresent()){
+            Event eventToUpdate = eventOptional.get();
+
+            for (Department department : eventToUpdate.getDepartments()) {
+                department.getEvents().remove(eventToUpdate);
+            }
+            eventToUpdate.getDepartments().clear();
+
+            Event updatedEvent = eventConverter.toEntity(eventDTO);
+            for (Department department : updatedEvent.getDepartments()){
+                Optional<Department> departmentOptional = departmentService.findById(department.getId());
+                if (departmentOptional.isPresent()){
+                    Department existingDepartment = departmentOptional.get();
+                    existingDepartment.getEvents().add(eventToUpdate); // Add the event to the department
+                    eventToUpdate.getDepartments().add(existingDepartment); // Add the department to the event
+                }
+            }
+
+            Event savedEvent = eventRepository.save(eventToUpdate);
+            return eventConverter.toDTO(savedEvent);
         } else {
             throw new EventNotFoundException("Event does not exist" + id);
         }
@@ -74,9 +89,14 @@ public class EventService {
     public void deleteEventById(int id){
         Optional<Event> event = eventRepository.findById(id);
         if (event.isPresent()){
-            eventRepository.deleteById(id);
+            Event eventToRemove = event.get();
+            for (Department department : eventToRemove.getDepartments()) {
+                department.getEvents().remove(eventToRemove);
+            }
+            eventRepository.delete(eventToRemove);
         } else {
             throw new EventNotFoundException("Event does not exist" + id);
         }
     }
+
 }
