@@ -30,6 +30,6 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private Set<UserEventDetails> userEventDetails;
     @JsonBackReference
-    @ManyToMany(mappedBy = "events")
+    @ManyToMany(mappedBy = "events", cascade = CascadeType.ALL)
     private Set<Department> departments;
 }
