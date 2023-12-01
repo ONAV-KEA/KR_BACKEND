@@ -21,6 +21,14 @@ public class InitData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        if (userRepository.count() == 0) {
+            System.out.println("InitData.run: 1");
+            createUsers();
+        }
+    }
+
+    private void createUsers() {
+        System.out.println("InitData.createUsers: 2");
         User user1 = new User();
         user1.setName("Anders");
         user1.setId(31);
