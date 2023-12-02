@@ -99,4 +99,9 @@ public class EventService {
         }
     }
 
+    public Page<EventDTO> findAllByDepartmentId(int id, Pageable pageable) {
+        Page<Event> events = eventRepository.findAllByDepartmentsId(id, pageable);
+        return events.map(eventConverter::toDTO);
+    }
+
 }

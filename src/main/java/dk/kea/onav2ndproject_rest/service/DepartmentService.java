@@ -1,6 +1,7 @@
 package dk.kea.onav2ndproject_rest.service;
 
 import dk.kea.onav2ndproject_rest.entity.Department;
+import dk.kea.onav2ndproject_rest.exception.DepartmentNotFoundException;
 import dk.kea.onav2ndproject_rest.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,6 @@ public class DepartmentService {
     }
 
     public Optional<Department> findById (int id) {
-        return Optional.ofNullable(departmentRepository.findById(id).orElse(null));
+        return Optional.ofNullable(departmentRepository.findById(id).orElseThrow(() -> new DepartmentNotFoundException("Department does not exist with id: " + id)));
     }
 }
