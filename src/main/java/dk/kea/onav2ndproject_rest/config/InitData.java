@@ -26,51 +26,6 @@ public class InitData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        User user1 = new User();
-        user1.setName("Anders");
-        user1.setId(1);
-        user1.setEmail("anders@mail.dk");
-        user1.setRole(Role.EMPLOYEE);
-        user1.setPassword(passwordEncoder.encode("1234"));
-        user1.setUsername("anders");
-        userRepository.save(user1);
-
-        User user2 = new User();
-        user2.setName("Benny");
-        user2.setId(2);
-        user2.setEmail("benny@mail.dk");
-        user2.setRole(Role.MANAGER);
-        user2.setPassword(passwordEncoder.encode("5678"));
-        user2.setUsername("benny");
-        userRepository.save(user2);
-
-        User user3 = new User();
-        user3.setName("Carla");
-        user3.setId(3);
-        user3.setEmail("carla@mail.dk");
-        user3.setRole(Role.EMPLOYEE);
-        user3.setPassword(passwordEncoder.encode("9012"));
-        user3.setUsername("carla");
-        userRepository.save(user3);
-
-        User user4 = new User();
-        user4.setName("Dennis");
-        user4.setId(4);
-        user4.setEmail("dennis@mail.dk");
-        user4.setRole(Role.HEADCHEF);
-        user4.setPassword(passwordEncoder.encode("3456"));
-        user4.setUsername("dennis");
-        userRepository.save(user4);
-
-        User user5 = new User();
-        user5.setName("Eva");
-        user5.setId(5);
-        user5.setEmail("eva@mail.dk");
-        user5.setRole(Role.EMPLOYEE);
-        user5.setPassword(passwordEncoder.encode("7890"));
-        user5.setUsername("eva");
-        userRepository.save(user5);
-
         Department department1 = new Department();
         department1.setId(1);
         department1.setName("IT");
@@ -96,6 +51,55 @@ public class InitData implements CommandLineRunner {
         department5.setName("P&D");
         departmentRepository.save(department5);
 
+        User user1 = new User();
+        user1.setName("Anders");
+        user1.setId(1);
+        user1.setEmail("anders@mail.dk");
+        user1.setRole(Role.EMPLOYEE);
+        user1.setPassword(passwordEncoder.encode("1234"));
+        user1.setUsername("anders");
+        user1.setDepartment(department1);
+        userRepository.save(user1);
+
+        User user2 = new User();
+        user2.setName("Benny");
+        user2.setId(2);
+        user2.setEmail("benny@mail.dk");
+        user2.setRole(Role.MANAGER);
+        user2.setPassword(passwordEncoder.encode("5678"));
+        user2.setUsername("benny");
+        user2.setDepartment(department2);
+        userRepository.save(user2);
+
+        User user3 = new User();
+        user3.setName("Carla");
+        user3.setId(3);
+        user3.setEmail("carla@mail.dk");
+        user3.setRole(Role.EMPLOYEE);
+        user3.setPassword(passwordEncoder.encode("9012"));
+        user3.setUsername("carla");
+        user3.setDepartment(department3);
+        userRepository.save(user3);
+
+        User user4 = new User();
+        user4.setName("Dennis");
+        user4.setId(4);
+        user4.setEmail("dennis@mail.dk");
+        user4.setRole(Role.HEADCHEF);
+        user4.setPassword(passwordEncoder.encode("3456"));
+        user4.setUsername("dennis");
+        user4.setDepartment(department4);
+        userRepository.save(user4);
+
+        User user5 = new User();
+        user5.setName("Eva");
+        user5.setId(5);
+        user5.setEmail("eva@mail.dk");
+        user5.setRole(Role.EMPLOYEE);
+        user5.setPassword(passwordEncoder.encode("7890"));
+        user5.setUsername("eva");
+        user5.setDepartment(department5);
+        userRepository.save(user5);
 
 
     }
