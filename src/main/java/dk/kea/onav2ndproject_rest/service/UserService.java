@@ -3,6 +3,8 @@ package dk.kea.onav2ndproject_rest.service;
 
 import dk.kea.onav2ndproject_rest.JwtTokenManager;
 import dk.kea.onav2ndproject_rest.config.SecurityConfiguration;
+import dk.kea.onav2ndproject_rest.dto.UserConverter;
+import dk.kea.onav2ndproject_rest.dto.UserDTO;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,7 @@ public class UserService implements IUserService{
 
     private UserRepository userRepository;
     private JwtTokenManager jwtTokenManager;
+    private UserConverter userConverter;
     @Override
     public Set<User> findAll() {
         Set<User> set = new HashSet<>();
@@ -58,8 +61,9 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User findByToken(String token) {
+    public UserDTO findByToken(String token) {
         String username = jwtTokenManager.getUsernameFromToken(token);
-        return userRepository.findByUsername(username).get(0);
+        User user = userRepository.findByUsername(username).get(0);
+        return userConverter.toDTO(user);
     }
 }
