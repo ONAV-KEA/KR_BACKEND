@@ -2,11 +2,16 @@ package dk.kea.onav2ndproject_rest.service;
 
 import dk.kea.onav2ndproject_rest.dto.EventConverter;
 import dk.kea.onav2ndproject_rest.dto.EventDTO;
+import dk.kea.onav2ndproject_rest.dto.UserEventResponseDTO;
 import dk.kea.onav2ndproject_rest.entity.Department;
 import dk.kea.onav2ndproject_rest.entity.Event;
+import dk.kea.onav2ndproject_rest.entity.User;
+import dk.kea.onav2ndproject_rest.entity.UserEventDetails;
 import dk.kea.onav2ndproject_rest.exception.EventNotFoundException;
 import dk.kea.onav2ndproject_rest.repository.DepartmentRepository;
 import dk.kea.onav2ndproject_rest.repository.EventRepository;
+import dk.kea.onav2ndproject_rest.repository.UserEventDetailsRepository;
+import dk.kea.onav2ndproject_rest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +29,10 @@ public class EventService {
     EventConverter eventConverter;
     @Autowired
     DepartmentService departmentService;
+    @Autowired
+    UserEventDetailsRepository userEventDetailsRepository;
+    @Autowired
+    UserRepository userRepository;
 
     public Page<EventDTO> getAllEvents(Pageable pageable) {
         Page<Event> events = eventRepository.findAll(pageable);
@@ -104,4 +113,20 @@ public class EventService {
         return events.map(eventConverter::toDTO);
     }
 
+    public void respondToEvent(Integer eventId, Long userId, UserEventResponseDTO response) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event does not exist: " + eventId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User does not exist: " + userId));
+
+        UserEventDetails userEventDetails = userEventDetailsRepository.findByEventIdAndUserId(eventId, userId)
+                .orElse(new UserEventDetails());
+
+        userEventDetails.setEvent(event);
+        userEventDetails.setUser(user);
+        userEventDetails.setParticipating(response.participating());
+        userEventDetails.setAdditionalNotes(response.additionalNote());
+
+        userEventDetailsRepository.save(userEventDetails);
+    }
 }

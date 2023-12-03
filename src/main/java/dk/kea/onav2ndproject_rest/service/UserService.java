@@ -6,6 +6,7 @@ import dk.kea.onav2ndproject_rest.config.SecurityConfiguration;
 import dk.kea.onav2ndproject_rest.dto.UserConverter;
 import dk.kea.onav2ndproject_rest.dto.UserDTO;
 import dk.kea.onav2ndproject_rest.entity.User;
+import dk.kea.onav2ndproject_rest.repository.UserEventDetailsRepository;
 import dk.kea.onav2ndproject_rest.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,8 @@ public class UserService implements IUserService{
     private UserRepository userRepository;
     private JwtTokenManager jwtTokenManager;
     private UserConverter userConverter;
+    private UserEventDetailsRepository userEventDetailsRepository;
+
     @Override
     public Set<User> findAll() {
         Set<User> set = new HashSet<>();

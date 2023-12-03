@@ -1,8 +1,11 @@
 package dk.kea.onav2ndproject_rest.api;
 
 import dk.kea.onav2ndproject_rest.dto.EventDTO;
+import dk.kea.onav2ndproject_rest.dto.UserEventResponseDTO;
 import dk.kea.onav2ndproject_rest.entity.Event;
+import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.service.EventService;
+import dk.kea.onav2ndproject_rest.service.UserService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +13,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/event")
@@ -17,6 +25,8 @@ public class EventController {
 
     @Autowired
     private EventService eventService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public Page<EventDTO> getAllEvents(Pageable pageable) {
@@ -50,5 +60,32 @@ public class EventController {
     @GetMapping("/department/{id}")
     public Page<EventDTO> getAllEventsByDepartmentId(@PathVariable int id, Pageable pageable) {
         return eventService.findAllByDepartmentId(id, pageable);
+    }
+    @PostMapping("/{eventId}/respond")
+    public ResponseEntity<?> respondToEvent(@PathVariable int eventId, @RequestBody UserEventResponseDTO response) {
+        Long userId = getCurrentUserId();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+
+        try {
+            eventService.respondToEvent(eventId, userId, response);
+            return ResponseEntity.ok("Response received successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+        }
+    }
+
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            List<User> users = userService.findByName(username);
+            if (!users.isEmpty()) {
+                return Long.valueOf(users.get(0).getId());
+            }
+        }
+        return null;
     }
 }
