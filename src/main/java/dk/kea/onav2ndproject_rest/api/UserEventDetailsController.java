@@ -1,5 +1,6 @@
 package dk.kea.onav2ndproject_rest.api;
 
+import dk.kea.onav2ndproject_rest.dto.UserDTO;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.service.UserEventDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/event")
 public class UserEventDetailsController {
 
@@ -18,8 +18,13 @@ public class UserEventDetailsController {
     UserEventDetailsService userEventDetailService;
 
     @GetMapping("/participating/{eventId}")
-    public ResponseEntity<List<User>> getParticipatingUsersByEventId(@PathVariable long eventId){
+    public ResponseEntity<List<UserDTO>> getParticipatingUsersByEventId(@PathVariable int eventId){
         return new ResponseEntity<>(userEventDetailService.getParticipatingUsersByEventId(eventId), HttpStatus.OK);
+    }
+
+    @GetMapping("/additionalNotes/{userId}/{eventId}")
+    public ResponseEntity<List<String>> getAdditionalNotesByUserIdAndEventId(@PathVariable int userId, @PathVariable int eventId){
+        return new ResponseEntity<>(userEventDetailService.getAdditionalNotesByUserIdAndEventId(userId, eventId), HttpStatus.OK);
     }
 
 }

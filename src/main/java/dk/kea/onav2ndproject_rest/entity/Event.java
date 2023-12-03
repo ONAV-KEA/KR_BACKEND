@@ -2,6 +2,7 @@ package dk.kea.onav2ndproject_rest.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class Event {
     private String location;
     private String imgRef;
     @OneToMany(mappedBy = "event")
+    @JsonIgnore
     private Set<UserEventDetails> userEventDetails;
     @JsonBackReference
     @ManyToMany(mappedBy = "events", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
