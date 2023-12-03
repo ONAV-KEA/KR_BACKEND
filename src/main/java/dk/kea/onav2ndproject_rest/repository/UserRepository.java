@@ -1,5 +1,6 @@
 package dk.kea.onav2ndproject_rest.repository;
 
+import dk.kea.onav2ndproject_rest.dto.UserDTO;
 import dk.kea.onav2ndproject_rest.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

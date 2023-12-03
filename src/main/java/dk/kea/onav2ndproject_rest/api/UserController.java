@@ -1,6 +1,7 @@
 package dk.kea.onav2ndproject_rest.api;
 
 import dk.kea.onav2ndproject_rest.JwtTokenManager;
+import dk.kea.onav2ndproject_rest.dto.UserDTO;
 import dk.kea.onav2ndproject_rest.entity.JwtRequestModel;
 import dk.kea.onav2ndproject_rest.entity.JwtResponseModel;
 import dk.kea.onav2ndproject_rest.entity.User;
@@ -87,9 +88,9 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<User> getUserByToken(@RequestParam String token){
+    public ResponseEntity<UserDTO> getUserByToken(@RequestParam String token){
         System.out.println("getUserByToken is called with token: " + token);
-        User user = userService.findByToken(token);
+        UserDTO user = userService.findByToken(token);
         return ResponseEntity.ok(user);
     }
 }

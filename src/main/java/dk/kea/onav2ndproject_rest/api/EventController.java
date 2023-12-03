@@ -46,4 +46,9 @@ public class EventController {
         eventService.deleteEventById(id);
         return new ResponseEntity<>("Event with id " + id + " was deleted", HttpStatus.OK);
     }
+
+    @GetMapping("/department/{id}")
+    public Page<EventDTO> getAllEventsByDepartmentId(@PathVariable int id, Pageable pageable) {
+        return eventService.findAllByDepartmentId(id, pageable);
+    }
 }
