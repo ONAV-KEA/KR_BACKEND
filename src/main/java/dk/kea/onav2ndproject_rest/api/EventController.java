@@ -17,7 +17,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/event")
@@ -65,14 +67,20 @@ public class EventController {
     public ResponseEntity<?> respondToEvent(@PathVariable int eventId, @RequestBody UserEventResponseDTO response) {
         Long userId = getCurrentUserId();
         if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("message", "User not authenticated");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseMap);
         }
 
         try {
             eventService.respondToEvent(eventId, userId, response);
-            return ResponseEntity.ok("Response received successfully");
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("message", "Response received successfully");
+            return ResponseEntity.ok(responseMap);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("message", "Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
         }
     }
 
