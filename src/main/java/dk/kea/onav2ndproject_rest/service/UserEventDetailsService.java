@@ -1,7 +1,10 @@
 package dk.kea.onav2ndproject_rest.service;
 
+import dk.kea.onav2ndproject_rest.dto.EventConverter;
+import dk.kea.onav2ndproject_rest.dto.EventDTO;
 import dk.kea.onav2ndproject_rest.dto.UserConverter;
 import dk.kea.onav2ndproject_rest.dto.UserDTO;
+import dk.kea.onav2ndproject_rest.entity.Event;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.repository.UserEventDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,8 @@ public class UserEventDetailsService {
     UserEventDetailsRepository userEventDetailsRepository;
     @Autowired
     UserConverter userConverter;
+    @Autowired
+    EventConverter eventConverter;
 
     public List<UserDTO> getParticipatingUsersByEventId(int eventId) {
         List<User> users = userEventDetailsRepository.findParticipatingUsersByEventId(eventId);
@@ -24,5 +29,9 @@ public class UserEventDetailsService {
 
     public List<String> getAdditionalNotesByUserIdAndEventId(int userId, int eventId) {
         return userEventDetailsRepository.findAdditionalNotesByUserIdAndEventId(userId, eventId);
+    }
+
+    public boolean isUserParticipatingInEvent(int userId, int eventId) {
+        return userEventDetailsRepository.isUserParticipatingInEvent(userId, eventId);
     }
 }

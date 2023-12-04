@@ -1,5 +1,6 @@
 package dk.kea.onav2ndproject_rest.repository;
 
+import dk.kea.onav2ndproject_rest.entity.Event;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.entity.UserEventDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +18,7 @@ public interface UserEventDetailsRepository extends JpaRepository<UserEventDetai
     List<String> findAdditionalNotesByUserIdAndEventId(@Param("userId") int userId, @Param("eventId") int eventId);
 
     Optional<UserEventDetails> findByEventIdAndUserId(Integer eventId, Long userId);
+    @Query("SELECT CASE WHEN COUNT(ued) > 0 THEN true ELSE false END FROM UserEventDetails ued WHERE ued.user.id = :userId AND ued.event.id = :eventId AND ued.participating = true")
+    boolean isUserParticipatingInEvent(int userId, int eventId);
 }
 
