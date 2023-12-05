@@ -8,6 +8,7 @@ import dk.kea.onav2ndproject_rest.entity.Event;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.entity.UserEventDetails;
 import dk.kea.onav2ndproject_rest.exception.EventNotFoundException;
+import dk.kea.onav2ndproject_rest.exception.UserNotFoundException;
 import dk.kea.onav2ndproject_rest.repository.DepartmentRepository;
 import dk.kea.onav2ndproject_rest.repository.EventRepository;
 import dk.kea.onav2ndproject_rest.repository.UserEventDetailsRepository;
@@ -44,7 +45,7 @@ public class EventService {
         if (event.isPresent()) {
             return eventConverter.toDTO(event.get());
         } else {
-            throw new EventNotFoundException("Event does not exist" + id);
+            throw new EventNotFoundException("Event does not exist with id " + id);
         }
     }
 
@@ -91,7 +92,7 @@ public class EventService {
             Event savedEvent = eventRepository.save(eventToUpdate);
             return eventConverter.toDTO(savedEvent);
         } else {
-            throw new EventNotFoundException("Event does not exist" + id);
+            throw new EventNotFoundException("Event does not exist with id " + id);
         }
     }
 
@@ -104,7 +105,7 @@ public class EventService {
             }
             eventRepository.delete(eventToRemove);
         } else {
-            throw new EventNotFoundException("Event does not exist" + id);
+            throw new EventNotFoundException("Event does not exist with id " + id);
         }
     }
 
@@ -115,9 +116,9 @@ public class EventService {
 
     public void respondToEvent(Integer eventId, Long userId, UserEventResponseDTO response) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException("Event does not exist: " + eventId));
+                .orElseThrow(() -> new EventNotFoundException("Event does not exist with id: " + eventId));
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User does not exist: " + userId));
+                .orElseThrow(() -> new UserNotFoundException("User does not exist with id: " + userId));
 
         UserEventDetails userEventDetails = userEventDetailsRepository.findByEventIdAndUserId(eventId, userId)
                 .orElse(new UserEventDetails());

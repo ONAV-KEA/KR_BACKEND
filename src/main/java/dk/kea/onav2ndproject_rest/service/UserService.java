@@ -6,6 +6,7 @@ import dk.kea.onav2ndproject_rest.config.SecurityConfiguration;
 import dk.kea.onav2ndproject_rest.dto.UserConverter;
 import dk.kea.onav2ndproject_rest.dto.UserDTO;
 import dk.kea.onav2ndproject_rest.entity.User;
+import dk.kea.onav2ndproject_rest.exception.UserNotFoundException;
 import dk.kea.onav2ndproject_rest.repository.UserEventDetailsRepository;
 import dk.kea.onav2ndproject_rest.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -54,7 +55,12 @@ public class UserService implements IUserService{
 
     @Override
     public Optional<User> findById(Long aLong) {
-        return userRepository.findById(aLong);
+        Optional<User> user = userRepository.findById(aLong);
+        if (user.isPresent()) {
+            return user;
+        } else {
+            throw new UserNotFoundException("User not found with id: " + aLong);
+        }
     }
 
     @Override
