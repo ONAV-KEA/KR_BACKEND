@@ -10,6 +10,7 @@ import dk.kea.onav2ndproject_rest.service.JwtUserDetailsService;
 import dk.kea.onav2ndproject_rest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -76,6 +77,7 @@ public class UserController {
         return ResponseEntity.ok(map);
     }
 
+    @Secured("MANAGER")
     @DeleteMapping("/deleteUser")
     public ResponseEntity<Map> deleteUser(@RequestBody User user) {
         System.out.println("deleteUser is called with user: " + user.getUsername());

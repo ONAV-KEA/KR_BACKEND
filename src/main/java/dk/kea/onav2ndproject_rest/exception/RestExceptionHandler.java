@@ -2,6 +2,7 @@ package dk.kea.onav2ndproject_rest.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -38,6 +39,15 @@ public class RestExceptionHandler {
         responseBody.put("timestamp", LocalDateTime.now());
         responseBody.put("message", ex.getMessage());
         return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex){
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("timestamp", LocalDateTime.now());
+        responseBody.put("message", ex.getMessage());
+        return new ResponseEntity<>(responseBody, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)
