@@ -13,4 +13,6 @@ public interface IUserService extends ICrudService<User,Long>{
     UserDTO findByToken(String token);
 
     Page<UserDTO> getAllUsers(Pageable pageable);
+
+    UserDTO createUser(UserDTO userDTO);
 }

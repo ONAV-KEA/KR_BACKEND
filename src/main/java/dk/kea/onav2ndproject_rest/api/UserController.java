@@ -6,12 +6,14 @@ import dk.kea.onav2ndproject_rest.dto.UserDTO;
 import dk.kea.onav2ndproject_rest.entity.JwtRequestModel;
 import dk.kea.onav2ndproject_rest.entity.JwtResponseModel;
 import dk.kea.onav2ndproject_rest.entity.User;
+import dk.kea.onav2ndproject_rest.repository.UserRepository;
 import dk.kea.onav2ndproject_rest.service.IUserService;
 import dk.kea.onav2ndproject_rest.service.JwtUserDetailsService;
 import dk.kea.onav2ndproject_rest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +39,8 @@ public class UserController {
     private JwtTokenManager jwtTokenManager;
     @Autowired
     private IUserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/signup")
     public ResponseEntity<JwtResponseModel> signup(@RequestBody JwtRequestModel request){
@@ -84,6 +88,13 @@ public class UserController {
     @GetMapping("/getAllUsers")
     public Page<UserDTO> getAllUsers(Pageable pageable) {
         return userService.getAllUsers(pageable);
+    }
+
+    @Secured("MANAGER")
+    @PostMapping("/createUser")
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+        UserDTO createdUser = userService.createUser(userDTO);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     @Secured("MANAGER")
