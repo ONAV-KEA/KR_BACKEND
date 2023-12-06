@@ -13,6 +13,7 @@ import dk.kea.onav2ndproject_rest.repository.DepartmentRepository;
 import dk.kea.onav2ndproject_rest.repository.EventRepository;
 import dk.kea.onav2ndproject_rest.repository.UserEventDetailsRepository;
 import dk.kea.onav2ndproject_rest.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -96,6 +97,7 @@ public class EventService {
         }
     }
 
+    @Transactional
     public void deleteEventById(int id){
         Optional<Event> event = eventRepository.findById(id);
         if (event.isPresent()){
@@ -103,6 +105,9 @@ public class EventService {
             for (Department department : eventToRemove.getDepartments()) {
                 department.getEvents().remove(eventToRemove);
             }
+            userEventDetailsRepository.findParticipatingUsersByEventId(id).forEach(user -> {
+                userEventDetailsRepository.deleteByUserId(user.getId());
+            });
             eventRepository.delete(eventToRemove);
         } else {
             throw new EventNotFoundException("Event does not exist with id " + id);

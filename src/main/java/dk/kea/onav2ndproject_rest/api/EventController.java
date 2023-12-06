@@ -43,21 +43,18 @@ public class EventController {
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
 
-    @Secured("MANAGER")
     @PostMapping
     public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDTO) {
         EventDTO createdEvent = eventService.createEvent(eventDTO);
         return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
     }
 
-    @Secured("MANAGER")
     @PutMapping("/{id}")
     public ResponseEntity<EventDTO> updateEvent(@PathVariable int id, @RequestBody EventDTO eventDTO) {
         EventDTO updatedEvent = eventService.updateEvent(id, eventDTO);
         return new ResponseEntity<>(updatedEvent, HttpStatus.OK);
     }
 
-    @Secured("MANAGER")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEvent(@PathVariable int id) {
         eventService.deleteEventById(id);
