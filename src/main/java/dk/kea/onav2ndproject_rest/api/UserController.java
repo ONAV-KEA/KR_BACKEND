@@ -1,6 +1,7 @@
 package dk.kea.onav2ndproject_rest.api;
 
 import dk.kea.onav2ndproject_rest.JwtTokenManager;
+import dk.kea.onav2ndproject_rest.dto.EventDTO;
 import dk.kea.onav2ndproject_rest.dto.UserDTO;
 import dk.kea.onav2ndproject_rest.entity.JwtRequestModel;
 import dk.kea.onav2ndproject_rest.entity.JwtResponseModel;
@@ -9,6 +10,8 @@ import dk.kea.onav2ndproject_rest.service.IUserService;
 import dk.kea.onav2ndproject_rest.service.JwtUserDetailsService;
 import dk.kea.onav2ndproject_rest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/user")
@@ -75,6 +79,11 @@ public class UserController {
         Map<String,String > map = new HashMap<>();
         map.put("message","this is secret from server");
         return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/getAllUsers")
+    public Page<UserDTO> getAllUsers(Pageable pageable) {
+        return userService.getAllUsers(pageable);
     }
 
     @Secured("MANAGER")

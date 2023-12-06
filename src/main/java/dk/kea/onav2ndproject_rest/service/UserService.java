@@ -3,13 +3,17 @@ package dk.kea.onav2ndproject_rest.service;
 
 import dk.kea.onav2ndproject_rest.JwtTokenManager;
 import dk.kea.onav2ndproject_rest.config.SecurityConfiguration;
+import dk.kea.onav2ndproject_rest.dto.EventDTO;
 import dk.kea.onav2ndproject_rest.dto.UserConverter;
 import dk.kea.onav2ndproject_rest.dto.UserDTO;
+import dk.kea.onav2ndproject_rest.entity.Event;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.exception.UserNotFoundException;
 import dk.kea.onav2ndproject_rest.repository.UserEventDetailsRepository;
 import dk.kea.onav2ndproject_rest.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +30,11 @@ public class UserService implements IUserService{
     private JwtTokenManager jwtTokenManager;
     private UserConverter userConverter;
     private UserEventDetailsRepository userEventDetailsRepository;
+
+    public Page<UserDTO> getAllUsers(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(userConverter::toDTO);
+    }
 
     @Override
     public Set<User> findAll() {
