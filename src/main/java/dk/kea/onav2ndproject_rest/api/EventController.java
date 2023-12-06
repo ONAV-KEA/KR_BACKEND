@@ -3,6 +3,7 @@ package dk.kea.onav2ndproject_rest.api;
 import dk.kea.onav2ndproject_rest.dto.EventDTO;
 import dk.kea.onav2ndproject_rest.dto.UserEventResponseDTO;
 import dk.kea.onav2ndproject_rest.entity.Event;
+import dk.kea.onav2ndproject_rest.entity.Role;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.service.EventService;
 import dk.kea.onav2ndproject_rest.service.UserService;
@@ -44,19 +45,35 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDTO) {
+    public ResponseEntity<?> createEvent(@RequestBody EventDTO eventDTO) {
+        User currentUser = getCurrentUser();
+        if (currentUser == null || currentUser.getRole() != Role.MANAGER) {
+            return new ResponseEntity<>("User not authorized", HttpStatus.UNAUTHORIZED);
+        }
+
         EventDTO createdEvent = eventService.createEvent(eventDTO);
         return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EventDTO> updateEvent(@PathVariable int id, @RequestBody EventDTO eventDTO) {
+    public ResponseEntity<?> updateEvent(@PathVariable int id, @RequestBody EventDTO eventDTO) {
+        User currentUser = getCurrentUser();
+        if (currentUser == null || currentUser.getRole() != Role.MANAGER) {
+            return new ResponseEntity<>("User not authorized", HttpStatus.UNAUTHORIZED);
+        }
+
         EventDTO updatedEvent = eventService.updateEvent(id, eventDTO);
         return new ResponseEntity<>(updatedEvent, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEvent(@PathVariable int id) {
+        User currentUser = getCurrentUser();
+        if (currentUser == null || currentUser.getRole() != Role.MANAGER) {
+            return new ResponseEntity<>("User not authorized", HttpStatus.UNAUTHORIZED);
+        }
+
+
         eventService.deleteEventById(id);
         return new ResponseEntity<>("Event with id " + id + " was deleted", HttpStatus.OK);
     }
@@ -99,4 +116,18 @@ public class EventController {
         }
         return null;
     }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            List<User> users = userService.findByName(username);
+            if (!users.isEmpty()) {
+                return users.get(0);
+            }
+        }
+        return null;
+    }
+
 }
