@@ -99,13 +99,21 @@ public class UserController {
 
     @Secured("MANAGER")
     @DeleteMapping("/deleteUser")
-    public ResponseEntity<Map> deleteUser(@RequestBody User user) {
+    public ResponseEntity<Map<String, String>> deleteUser(@RequestBody User user) {
         System.out.println("deleteUser is called with user: " + user.getUsername());
-        List<User> users =  userService.findByName(user.getUsername());
+        List<User> users = userService.findByName(user.getUsername());
+
+        if (users.isEmpty()) {
+            Map<String, String> map = new HashMap<>();
+            map.put("message", "User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map);
+        }
+
         User userToDelete = users.get(0);
         userService.delete(userToDelete);
-        Map<String,String > map = new HashMap<>();
-        map.put("message","user deleted, if found " + user.getUsername());
+
+        Map<String, String> map = new HashMap<>();
+        map.put("message", "User deleted: " + user.getUsername());
         return ResponseEntity.ok(map);
     }
 
