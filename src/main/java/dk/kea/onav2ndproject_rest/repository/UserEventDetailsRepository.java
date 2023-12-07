@@ -6,10 +6,12 @@ import dk.kea.onav2ndproject_rest.entity.UserEventDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface UserEventDetailsRepository extends JpaRepository<UserEventDetails, Long> {
     @Query("SELECT ued.user FROM UserEventDetails ued WHERE ued.participating = true AND ued.event.id = :eventId")
     List<User> findParticipatingUsersByEventId(int eventId);
@@ -20,5 +22,7 @@ public interface UserEventDetailsRepository extends JpaRepository<UserEventDetai
     Optional<UserEventDetails> findByEventIdAndUserId(Integer eventId, Long userId);
     @Query("SELECT CASE WHEN COUNT(ued) > 0 THEN true ELSE false END FROM UserEventDetails ued WHERE ued.user.id = :userId AND ued.event.id = :eventId AND ued.participating = true")
     boolean isUserParticipatingInEvent(int userId, int eventId);
+
+    void deleteByUserId(int userId);
 }
 
