@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserEventDetailsRepository extends JpaRepository<UserEventDetails, Long> {
+public interface UserEventDetailsRepository extends JpaRepository<UserEventDetails, Integer> {
     @Query("SELECT ued.user FROM UserEventDetails ued WHERE ued.participating = true AND ued.event.id = :eventId")
     List<User> findParticipatingUsersByEventId(int eventId);
 
     @Query("SELECT ued.additionalNotes FROM UserEventDetails ued WHERE ued.user.id = :userId AND ued.event.id = :eventId")
     List<String> findAdditionalNotesByUserIdAndEventId(@Param("userId") int userId, @Param("eventId") int eventId);
 
-    Optional<UserEventDetails> findByEventIdAndUserId(Integer eventId, Long userId);
+    Optional<UserEventDetails> findByEventIdAndUserId(Integer eventId, int userId);
     @Query("SELECT CASE WHEN COUNT(ued) > 0 THEN true ELSE false END FROM UserEventDetails ued WHERE ued.user.id = :userId AND ued.event.id = :eventId AND ued.participating = true")
     boolean isUserParticipatingInEvent(int userId, int eventId);
 

@@ -51,8 +51,7 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public UserDTO createUser(UserDTO userDTO) {
-        User user = userConverter.toEntity(userDTO);
+    public UserDTO createUser(User user) {
         user.setId(0);
         user.setPassword(SecurityConfiguration.passwordEncoder().encode(user.getPassword()));
         user = userRepository.save(user);
@@ -71,11 +70,15 @@ public class UserService implements IUserService{
 
     @Override
     public Optional<User> findById(Long aLong) {
-        Optional<User> user = userRepository.findById(aLong);
+        return Optional.empty();
+    }
+
+    public Optional<User> findById(int id) {
+        Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             return user;
         } else {
-            throw new UserNotFoundException("User not found with id: " + aLong);
+            throw new UserNotFoundException("User not found with id: " + id);
         }
     }
 
@@ -90,5 +93,15 @@ public class UserService implements IUserService{
         String username = jwtTokenManager.getUsernameFromToken(token);
         User user = userRepository.findByUsername(username).get(0);
         return userConverter.toDTO(user);
+    }
+
+    @Override
+    public void deleteUserById(int id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            userRepository.deleteById(id);
+        } else {
+            throw new UserNotFoundException("User not found with id: " + id);
+        }
     }
 }

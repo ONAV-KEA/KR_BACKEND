@@ -5,8 +5,10 @@ import dk.kea.onav2ndproject_rest.dto.EventDTO;
 import dk.kea.onav2ndproject_rest.dto.UserDTO;
 import dk.kea.onav2ndproject_rest.entity.JwtRequestModel;
 import dk.kea.onav2ndproject_rest.entity.JwtResponseModel;
+import dk.kea.onav2ndproject_rest.entity.Role;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.repository.UserRepository;
+import dk.kea.onav2ndproject_rest.service.AuthenticationService;
 import dk.kea.onav2ndproject_rest.service.IUserService;
 import dk.kea.onav2ndproject_rest.service.JwtUserDetailsService;
 import dk.kea.onav2ndproject_rest.service.UserService;
@@ -40,7 +42,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
     @Autowired
-    private UserRepository userRepository;
+    private AuthenticationService authenticationService;
 
     @PostMapping("/signup")
     public ResponseEntity<JwtResponseModel> signup(@RequestBody JwtRequestModel request){
@@ -90,31 +92,25 @@ public class UserController {
         return userService.getAllUsers(pageable);
     }
 
-    @Secured("MANAGER")
     @PostMapping("/createUser")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        UserDTO createdUser = userService.createUser(userDTO);
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        User currentUser = authenticationService.getCurrentUser();
+        if (currentUser == null || currentUser.getRole() != Role.MANAGER) {
+            return new ResponseEntity<>("User not authorized", HttpStatus.UNAUTHORIZED);
+        }
+        UserDTO createdUser = userService.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    @Secured("MANAGER")
-    @DeleteMapping("/deleteUser")
-    public ResponseEntity<Map<String, String>> deleteUser(@RequestBody User user) {
-        System.out.println("deleteUser is called with user: " + user.getUsername());
-        List<User> users = userService.findByName(user.getUsername());
-
-        if (users.isEmpty()) {
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "User not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable int id) {
+        User currentUser = authenticationService.getCurrentUser();
+        if (currentUser == null || currentUser.getRole() != Role.MANAGER) {
+            return new ResponseEntity<>("User not authorized", HttpStatus.UNAUTHORIZED);
         }
 
-        User userToDelete = users.get(0);
-        userService.delete(userToDelete);
-
-        Map<String, String> map = new HashMap<>();
-        map.put("message", "User deleted: " + user.getUsername());
-        return ResponseEntity.ok(map);
+        userService.deleteUserById(id);
+        return new ResponseEntity<>("User with id " + id + " was deleted", HttpStatus.OK);
     }
 
     @GetMapping()

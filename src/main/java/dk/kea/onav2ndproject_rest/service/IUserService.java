@@ -14,5 +14,7 @@ public interface IUserService extends ICrudService<User,Long>{
 
     Page<UserDTO> getAllUsers(Pageable pageable);
 
-    UserDTO createUser(UserDTO userDTO);
+    UserDTO createUser(User user);
+
+    void deleteUserById(int id);
 }

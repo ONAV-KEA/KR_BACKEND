@@ -119,7 +119,7 @@ public class EventService {
         return events.map(eventConverter::toDTO);
     }
 
-    public void respondToEvent(Integer eventId, Long userId, UserEventResponseDTO response) {
+    public void respondToEvent(Integer eventId, int userId, UserEventResponseDTO response) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event does not exist with id: " + eventId));
         User user = userRepository.findById(userId)
