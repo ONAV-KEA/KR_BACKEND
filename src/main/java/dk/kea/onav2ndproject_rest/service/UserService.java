@@ -3,13 +3,17 @@ package dk.kea.onav2ndproject_rest.service;
 
 import dk.kea.onav2ndproject_rest.JwtTokenManager;
 import dk.kea.onav2ndproject_rest.config.SecurityConfiguration;
+import dk.kea.onav2ndproject_rest.dto.EventDTO;
 import dk.kea.onav2ndproject_rest.dto.UserConverter;
 import dk.kea.onav2ndproject_rest.dto.UserDTO;
+import dk.kea.onav2ndproject_rest.entity.Event;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.exception.UserNotFoundException;
 import dk.kea.onav2ndproject_rest.repository.UserEventDetailsRepository;
 import dk.kea.onav2ndproject_rest.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,11 @@ public class UserService implements IUserService{
     private UserConverter userConverter;
     private UserEventDetailsRepository userEventDetailsRepository;
 
+    public Page<UserDTO> getAllUsers(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(userConverter::toDTO);
+    }
+
     @Override
     public Set<User> findAll() {
         Set<User> set = new HashSet<>();
@@ -36,11 +45,17 @@ public class UserService implements IUserService{
 
     @Override
     public User save(User user) {
-//        if(user.getPassword() == null) {
             PasswordEncoder pw = SecurityConfiguration.passwordEncoder();
             user.setPassword(pw.encode(user.getPassword()));
-//        }
         return userRepository.save(user);
+    }
+
+    @Override
+    public UserDTO createUser(User user) {
+        user.setId(0);
+        user.setPassword(SecurityConfiguration.passwordEncoder().encode(user.getPassword()));
+        user = userRepository.save(user);
+        return userConverter.toDTO(user);
     }
 
     @Override
@@ -55,11 +70,15 @@ public class UserService implements IUserService{
 
     @Override
     public Optional<User> findById(Long aLong) {
-        Optional<User> user = userRepository.findById(aLong);
+        return Optional.empty();
+    }
+
+    public Optional<User> findById(int id) {
+        Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             return user;
         } else {
-            throw new UserNotFoundException("User not found with id: " + aLong);
+            throw new UserNotFoundException("User not found with id: " + id);
         }
     }
 
@@ -74,5 +93,15 @@ public class UserService implements IUserService{
         String username = jwtTokenManager.getUsernameFromToken(token);
         User user = userRepository.findByUsername(username).get(0);
         return userConverter.toDTO(user);
+    }
+
+    @Override
+    public void deleteUserById(int id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            userRepository.deleteById(id);
+        } else {
+            throw new UserNotFoundException("User not found with id: " + id);
+        }
     }
 }

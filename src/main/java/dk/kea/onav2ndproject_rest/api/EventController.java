@@ -5,6 +5,7 @@ import dk.kea.onav2ndproject_rest.dto.UserEventResponseDTO;
 import dk.kea.onav2ndproject_rest.entity.Event;
 import dk.kea.onav2ndproject_rest.entity.Role;
 import dk.kea.onav2ndproject_rest.entity.User;
+import dk.kea.onav2ndproject_rest.service.AuthenticationService;
 import dk.kea.onav2ndproject_rest.service.EventService;
 import dk.kea.onav2ndproject_rest.service.UserService;
 import org.apache.coyote.Response;
@@ -32,6 +33,8 @@ public class EventController {
     private EventService eventService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @GetMapping
     public Page<EventDTO> getAllEvents(Pageable pageable) {
@@ -46,7 +49,7 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<?> createEvent(@RequestBody EventDTO eventDTO) {
-        User currentUser = getCurrentUser();
+        User currentUser = authenticationService.getCurrentUser();
         if (currentUser == null || currentUser.getRole() != Role.MANAGER) {
             return new ResponseEntity<>("User not authorized", HttpStatus.UNAUTHORIZED);
         }
@@ -57,7 +60,7 @@ public class EventController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateEvent(@PathVariable int id, @RequestBody EventDTO eventDTO) {
-        User currentUser = getCurrentUser();
+        User currentUser = authenticationService.getCurrentUser();
         if (currentUser == null || currentUser.getRole() != Role.MANAGER) {
             return new ResponseEntity<>("User not authorized", HttpStatus.UNAUTHORIZED);
         }
@@ -68,7 +71,7 @@ public class EventController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEvent(@PathVariable int id) {
-        User currentUser = getCurrentUser();
+        User currentUser = authenticationService.getCurrentUser();
         if (currentUser == null || currentUser.getRole() != Role.MANAGER) {
             return new ResponseEntity<>("User not authorized", HttpStatus.UNAUTHORIZED);
         }
@@ -85,8 +88,8 @@ public class EventController {
 
     @PostMapping("/{eventId}/respond")
     public ResponseEntity<?> respondToEvent(@PathVariable int eventId, @RequestBody UserEventResponseDTO response) {
-        Long userId = getCurrentUserId();
-        if (userId == null) {
+        int userId = authenticationService.getCurrentUserId();
+        if (userId == -1) {
             Map<String, String> responseMap = new HashMap<>();
             responseMap.put("message", "User not authenticated");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseMap);
@@ -104,30 +107,6 @@ public class EventController {
         }
     }
 
-    private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-            List<User> users = userService.findByName(username);
-            if (!users.isEmpty()) {
-                return Long.valueOf(users.get(0).getId());
-            }
-        }
-        return null;
-    }
 
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-            List<User> users = userService.findByName(username);
-            if (!users.isEmpty()) {
-                return users.get(0);
-            }
-        }
-        return null;
-    }
 
 }
