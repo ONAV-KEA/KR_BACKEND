@@ -27,6 +27,8 @@ public class Event {
     @Column(name="description", length=512)
     private String description;
     private String location;
+    @Lob
+    @Column(name="img_ref", length=512)
     private String imgRef;
     @OneToMany(mappedBy = "event")
     @JsonIgnore
