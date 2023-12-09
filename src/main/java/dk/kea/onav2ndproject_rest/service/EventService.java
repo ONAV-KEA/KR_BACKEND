@@ -80,6 +80,13 @@ public class EventService {
             }
             eventToUpdate.getDepartments().clear();
 
+            eventToUpdate.setName(eventDTO.name());
+            eventToUpdate.setDescription(eventDTO.description());
+            eventToUpdate.setStartDate(eventDTO.startDate());
+            eventToUpdate.setEndDate(eventDTO.endDate());
+            eventToUpdate.setImgRef(eventDTO.imgRef());
+            eventToUpdate.setLocation(eventDTO.location());
+
             Event updatedEvent = eventConverter.toEntity(eventDTO);
             for (Department department : updatedEvent.getDepartments()){
                 Optional<Department> departmentOptional = departmentService.findById(department.getId());
