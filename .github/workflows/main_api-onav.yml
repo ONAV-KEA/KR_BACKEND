@@ -52,6 +52,7 @@ jobs:
           package: '*.jar'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6501A6378CF94AB893EE435AA51B5D2F }}
 env:
+  TEST_DB: ${{ secrets.TEST_DB }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
   DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
