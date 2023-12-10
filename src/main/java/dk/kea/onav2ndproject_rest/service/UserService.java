@@ -12,6 +12,7 @@ import dk.kea.onav2ndproject_rest.exception.UserNotFoundException;
 import dk.kea.onav2ndproject_rest.repository.UserEventDetailsRepository;
 import dk.kea.onav2ndproject_rest.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Service
 public class UserService implements IUserService{
 
@@ -30,6 +32,11 @@ public class UserService implements IUserService{
     private JwtTokenManager jwtTokenManager;
     private UserConverter userConverter;
     private UserEventDetailsRepository userEventDetailsRepository;
+
+    public UserService (UserRepository userRepository, UserConverter userConverter) {
+        this.userRepository = userRepository;
+        this.userConverter = userConverter;
+    }
 
     public Page<UserDTO> getAllUsers(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
