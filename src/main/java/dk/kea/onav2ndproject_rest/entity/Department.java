@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 public class Department {
     @Id
@@ -22,5 +22,9 @@ public class Department {
             joinColumns = {@JoinColumn(name = "department_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")}
     )
-    private Set<Event> events;
+    private Set<Event> events = new HashSet<>();
+
+    public Department() {
+        this.events = new HashSet<>();
+    }
 }

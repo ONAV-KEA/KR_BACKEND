@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -35,5 +36,10 @@ public class Event {
     private Set<UserEventDetails> userEventDetails;
     @JsonBackReference
     @ManyToMany(mappedBy = "events", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Department> departments;
+    private Set<Department> departments = new HashSet<>();
+
+    public Event(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

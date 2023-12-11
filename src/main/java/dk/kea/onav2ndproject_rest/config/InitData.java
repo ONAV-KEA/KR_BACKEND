@@ -29,7 +29,6 @@ public class InitData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
         List<Department> departments = new ArrayList<>();
 
         if (departmentRepository.count() == 0) {
@@ -37,7 +36,7 @@ public class InitData implements CommandLineRunner {
             departments = createDepartments();
         }
 
-        if (userRepository.count() == 0) {
+        if (!departments.isEmpty() && userRepository.count() == 0) {
             System.out.println("InitData.run: 1");
             createUsers(departments);
         }

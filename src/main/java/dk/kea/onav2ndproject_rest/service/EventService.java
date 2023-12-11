@@ -36,6 +36,12 @@ public class EventService {
     @Autowired
     UserRepository userRepository;
 
+    public EventService(EventRepository eventRepository, EventConverter eventConverter, DepartmentService departmentService) {
+        this.eventRepository = eventRepository;
+        this.eventConverter = eventConverter;
+        this.departmentService = departmentService;
+    }
+
     public Page<EventDTO> getAllEvents(Pageable pageable) {
         Page<Event> events = eventRepository.findAll(pageable);
         return events.map(eventConverter::toDTO);

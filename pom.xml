@@ -60,11 +60,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
             <version>0.11.5</version>
@@ -99,9 +94,8 @@
                 <version>3.0.0-M5</version>
                 <configuration>
                     <includes>
-                        <include>Sample.java</include>
+                        <include>**/*Test.java</include>
                     </includes>
-
                 </configuration>
             </plugin>
             <plugin>
