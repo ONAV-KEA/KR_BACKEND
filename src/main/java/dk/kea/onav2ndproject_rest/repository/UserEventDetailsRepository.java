@@ -21,7 +21,7 @@ public interface UserEventDetailsRepository extends JpaRepository<UserEventDetai
 
     Optional<UserEventDetails> findByEventIdAndUserId(Integer eventId, int userId);
     @Query("SELECT CASE WHEN COUNT(ued) > 0 THEN true ELSE false END FROM UserEventDetails ued WHERE ued.user.id = :userId AND ued.event.id = :eventId AND ued.participating = true")
-    boolean isUserParticipatingInEvent(int userId, int eventId);
+    boolean isUserParticipatingInEvent(@Param("userId") int userId, @Param("eventId") int eventId);
 
     void deleteByUserId(int userId);
 }
