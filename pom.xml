@@ -119,9 +119,6 @@
                 <version>3.8.1</version> <!-- Use the latest version that supports Java 17 -->
                 <configuration>
                     <release>17</release>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
