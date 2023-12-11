@@ -13,6 +13,7 @@ import dk.kea.onav2ndproject_rest.repository.UserEventDetailsRepository;
 import dk.kea.onav2ndproject_rest.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,8 +29,10 @@ import java.util.Set;
 @Service
 public class UserService implements IUserService{
 
+    @Autowired
     private UserRepository userRepository;
     private JwtTokenManager jwtTokenManager;
+    @Autowired
     private UserConverter userConverter;
     private UserEventDetailsRepository userEventDetailsRepository;
 
