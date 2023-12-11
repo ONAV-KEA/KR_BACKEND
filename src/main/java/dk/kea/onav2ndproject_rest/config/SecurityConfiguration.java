@@ -64,7 +64,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         System.out.println("addCorsMappings called");
         registry.addMapping("/**")  // /** means match any string recursively
-                .allowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*/") //Multiple strings allowed. Wildcard * matches all port numbers.
+                .allowedOriginPatterns("*") //Multiple strings allowed. Wildcard * matches all port numbers.
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS") // decide which methods to allow
                 .allowCredentials(true);
     }
