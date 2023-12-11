@@ -31,6 +31,7 @@ public class UserService implements IUserService{
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
     private JwtTokenManager jwtTokenManager;
     @Autowired
     private UserConverter userConverter;
