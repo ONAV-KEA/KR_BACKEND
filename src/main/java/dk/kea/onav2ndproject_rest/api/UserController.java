@@ -12,6 +12,8 @@ import dk.kea.onav2ndproject_rest.service.AuthenticationService;
 import dk.kea.onav2ndproject_rest.service.IUserService;
 import dk.kea.onav2ndproject_rest.service.JwtUserDetailsService;
 import dk.kea.onav2ndproject_rest.service.UserService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @RestController
 @RequestMapping("/api/user")
 public class UserController {

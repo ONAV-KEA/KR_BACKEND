@@ -7,11 +7,15 @@ import dk.kea.onav2ndproject_rest.dto.UserDTO;
 import dk.kea.onav2ndproject_rest.entity.Event;
 import dk.kea.onav2ndproject_rest.entity.User;
 import dk.kea.onav2ndproject_rest.repository.UserEventDetailsRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Service
 public class UserEventDetailsService {
 
