@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface UserEventDetailsRepository extends JpaRepository<UserEventDetails, Integer> {
     @Query("SELECT ued.user FROM UserEventDetails ued WHERE ued.participating = true AND ued.event.id = :eventId")
-    List<User> findParticipatingUsersByEventId(int eventId);
+    List<User> findParticipatingUsersByEventId(@Param("eventId") int eventId);
 
     @Query("SELECT ued.additionalNotes FROM UserEventDetails ued WHERE ued.user.id = :userId AND ued.event.id = :eventId")
     List<String> findAdditionalNotesByUserIdAndEventId(@Param("userId") int userId, @Param("eventId") int eventId);
